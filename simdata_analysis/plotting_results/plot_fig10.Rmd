@@ -1,0 +1,151 @@
+---
+title: "Figure 10"
+author: '##### Manon Makino'
+date: '2023-02-21'
+output: html_document
+---
+
+# Plotting the figures 10 and Appendix 7
+
+Plotting the figures a,b combined
+
+## Loading scripts
+
+```{r}
+source("../../param.R")
+source("../../package.R")
+```
+
+## Setting parameters
+
+### fixed setting
+
+```{r}
+PDEG = param$pdeg
+data.name = param$simdata.name
+name = data.name[1]
+N_trial = 50
+```
+
+### manual setting
+
+```{r}
+n1 = 3
+```
+
+## Formatting data
+
+### preparation
+
+```{r}
+colname.list <- NULL
+for (pdeg in PDEG){
+  colname <- paste('PDEG = ',pdeg,sep='')
+  colname.list <- c(colname.list,colname)
+}
+rowname.list <- 1:N_trial
+
+MBCdeg02_1 <- MBCdeg03_1 <- MBCdeg04_1 <- MBCdeg05_1 <- MBCdeg10_1 <- MBCdeg15_1 <- MBCdeg20_1 <- MBCdeg02_2 <- MBCdeg03_2 <- MBCdeg04_2 <- MBCdeg05_2 <- MBCdeg10_2 <- MBCdeg15_2 <- MBCdeg20_2 <- MBCdeg02_3 <- MBCdeg03_3 <- MBCdeg04_3 <- MBCdeg05_3 <- MBCdeg10_3 <- MBCdeg15_3 <- MBCdeg20_3 <- matrix(0,ncol = length(PDEG),nrow = N_trial) 
+colnames(MBCdeg02_1) <- colnames(MBCdeg03_1) <- colnames(MBCdeg04_1) <- colnames(MBCdeg05_1) <- colnames(MBCdeg10_1) <- colnames(MBCdeg15_1) <- colnames(MBCdeg20_1) <- colnames(MBCdeg02_2) <- colnames(MBCdeg03_2) <- colnames(MBCdeg04_2) <- colnames(MBCdeg05_2) <- colnames(MBCdeg10_2) <- colnames(MBCdeg15_2) <- colnames(MBCdeg20_2) <- colnames(MBCdeg02_3) <- colnames(MBCdeg03_3) <- colnames(MBCdeg04_3) <- colnames(MBCdeg05_3) <- colnames(MBCdeg10_3) <- colnames(MBCdeg15_3) <- colnames(MBCdeg20_3) <- colname
+
+matome <- NULL
+```
+
+### Creating original data
+
+```{r}
+for (assign in param$assign$`2group`){
+  P1 <- assign[1]
+  
+  for(i in 1:ncol(MBCdeg02_1)){
+    in_f <- paste("../auc_2group_",name,"_",PDEG[i],"_",P1,"_fixed_n",n1,".txt",sep = "")
+    data <- read.table(in_f,header = TRUE,sep = '\t')
+    MBCdeg02_1[,i] <- data$MBCdeg1_2
+    MBCdeg03_1[,i] <- data$MBCdeg1_3
+    MBCdeg04_1[,i] <- data$MBCdeg1_4
+    MBCdeg05_1[,i] <- data$MBCdeg1_5
+    MBCdeg10_1[,i] <- data$MBCdeg1_10
+    MBCdeg15_1[,i] <- data$MBCdeg1_15
+    MBCdeg20_1[,i] <- data$MBCdeg1_20
+    
+    MBCdeg02_2[,i] <- data$MBCdeg2_2
+    MBCdeg03_2[,i] <- data$MBCdeg2_3
+    MBCdeg04_2[,i] <- data$MBCdeg2_4
+    MBCdeg05_2[,i] <- data$MBCdeg2_5
+    MBCdeg10_2[,i] <- data$MBCdeg2_10
+    MBCdeg15_2[,i] <- data$MBCdeg2_15
+    MBCdeg20_2[,i] <- data$MBCdeg2_20
+  
+    MBCdeg02_3[,i] <- data$MBCdeg3_2
+    MBCdeg03_3[,i] <- data$MBCdeg3_3
+    MBCdeg04_3[,i] <- data$MBCdeg3_4
+    MBCdeg05_3[,i] <- data$MBCdeg3_5
+    MBCdeg10_3[,i] <- data$MBCdeg3_10
+    MBCdeg15_3[,i] <- data$MBCdeg3_15
+    MBCdeg20_3[,i] <- data$MBCdeg3_20
+  }
+  P <-paste('(PG1, PG2)\n','(',P1,',',1-P1,')', sep = '')
+  
+  datMBCdeg1_02 <- data.frame(Method = "MBCdeg1_02",P1 = P,melt(MBCdeg1_02))
+  datMBCdeg1_03 <- data.frame(Method = "MBCdeg1_03",P1 = P,melt(MBCdeg1_03))
+  datMBCdeg1_04 <- data.frame(Method = "MBCdeg1_04",P1 = P,melt(MBCdeg1_04))
+  datMBCdeg1_05 <- data.frame(Method = "MBCdeg1_05",P1 = P,melt(MBCdeg1_05))
+  datMBCdeg1_10 <- data.frame(Method = "MBCdeg1_10",P1 = P,melt(MBCdeg1_10))
+  datMBCdeg1_15 <- data.frame(Method = "MBCdeg1_15",P1 = P,melt(MBCdeg1_15))
+  datMBCdeg1_20 <- data.frame(Method = "MBCdeg1_20",P1 = P,melt(MBCdeg1_20))
+  
+  datMBCdeg2_02 <- data.frame(Method = "MBCdeg2_02",P1 = P,melt(MBCdeg2_02))
+  datMBCdeg2_03 <- data.frame(Method = "MBCdeg2_03",P1 = P,melt(MBCdeg2_03))
+  datMBCdeg2_04 <- data.frame(Method = "MBCdeg2_04",P1 = P,melt(MBCdeg2_04))
+  datMBCdeg2_05 <- data.frame(Method = "MBCdeg2_05",P1 = P,melt(MBCdeg2_05))
+  datMBCdeg2_10 <- data.frame(Method = "MBCdeg2_10",P1 = P,melt(MBCdeg2_10))
+  datMBCdeg2_15 <- data.frame(Method = "MBCdeg2_15",P1 = P,melt(MBCdeg2_15))
+  datMBCdeg2_20 <- data.frame(Method = "MBCdeg2_20",P1 = P,melt(MBCdeg2_20))
+  
+  
+  datMBCdeg3_02 <- data.frame(Method = "MBCdeg3_02", P1 = P, melt(MBCdeg3_02))
+  datMBCdeg3_03 <- data.frame(Method = "MBCdeg3_03", P1 = P, melt(MBCdeg3_03))
+  datMBCdeg3_04 <- data.frame(Method = "MBCdeg3_04", P1 = P, melt(MBCdeg3_04))
+  datMBCdeg3_05 <- data.frame(Method = "MBCdeg3_05", P1 = P, melt(MBCdeg3_05))
+  datMBCdeg3_10 <- data.frame(Method = "MBCdeg3_10", P1 = P, melt(MBCdeg3_10))
+  datMBCdeg3_15 <- data.frame(Method = "MBCdeg3_15", P1 = P, melt(MBCdeg3_15))
+  datMBCdeg3_20 <- data.frame(Method = "MBCdeg3_20", P1 = P, melt(MBCdeg3_20))
+  
+  dat <- rbind(datMBCdeg02_1,datMBCdeg03_1,datMBCdeg04_1,datMBCdeg05_1,datMBCdeg10_1,datMBCdeg15_1,datMBCdeg20_1,datMBCdeg02_2,datMBCdeg03_2,datMBCdeg04_2,datMBCdeg05_2,datMBCdeg10_2,datMBCdeg15_2,datMBCdeg20_2,datMBCdeg02_3,datMBCdeg03_3,datMBCdeg04_3,datMBCdeg05_3,datMBCdeg10_3,datMBCdeg15_3,datMBCdeg20_3)
+  matome <- rbind(matome,dat)
+}
+
+colnames(matome) <- c('Method','Assign','rep','PDEG','AUC')
+```
+
+## Plotting
+
+```{r}
+g <- ggplot(matome,aes(x = Method,y = AUC,fill = Method))
+g <- g + theme_bw()
+g <- g + labs(x = "",y = "AUC",color = 'Method')
+g <- g + scale_x_discrete(label=c("","K = 2","","","K = 3","","","K = 4","","","K = 5","","","K = 10","","","K = 15","","","K = 20",""))
+g <- g + scale_color_manual(values = rep(c("#FF367F","#4689FF","#009900"),7)) + scale_fill_manual(values = rep("white",21))
+g <- g + geom_boxplot(aes(col = Method))
+g <- g + scale_y_continuous(limit = c(0,1.0))
+g <- g + theme(axis.title.y = element_text(size = 18,face = "bold"),
+               axis.text.x = element_text(size = 15,face = "bold",angle = 90),
+               axis.text.y = element_text(size = 16,face = "bold"),
+               strip.text.x = element_text(size = 18,face = "bold.italic"),
+               strip.text.y = element_text(size = 18,face = "bold.italic"),
+               legend.box = 'horizontal', 
+               legend.position = 'none',
+               legend.title = element_text(size = 15, face = "bold"),
+               legend.text = element_text(size = 13),
+               panel.grid.major.x = element_blank())
+g <- g + facet_grid(PDEG ~ Assign)
+plot(g)
+```
+
+
+## Out put
+
+```{r}
+out_f <- paste('test_tcc_fc_K_n',n1,'.png',sep = '')
+ggsave(file = out_f,plot = g,dpi = 300,width= 10,height = 15)
+```

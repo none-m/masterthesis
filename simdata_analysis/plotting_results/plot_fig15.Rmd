@@ -1,0 +1,109 @@
+---
+title: "Figure 15"
+author: '##### Manon Makino'
+date: '2023-02-21'
+output: html_document
+---
+
+# Plotting the figures 15 and Appendix 11
+
+Plotting the figures a,b combined
+
+## Loading scripts
+
+```{r}
+source("../../param.R")
+source("../../package.R")
+```
+
+## Setting parameters
+
+### fixed setting
+
+```{r}
+PDEG = param$pdeg
+data.name = param$simdata.name
+name = data.name[1]
+N_trial = 100
+```
+
+### manual setting
+
+```{r}
+n1 = 3
+```
+
+## Formatting data
+
+### preparation
+
+```{r}
+colname.list <- NULL
+for (pdeg in PDEG){
+  colname <- paste('PDEG = ',pdeg,sep = '')
+  colname.list <- c(colname.list,colname)
+}
+rowname <- 1:N_trial
+
+MBCdeg1 <- MBCdeg2 <- MBCdeg3 <- matrix(0,ncol = length(PDEG),nrow = N_trial)
+colnames(MBCdeg1) <- colnames(MBCdeg2) <- colnames(MBCdeg3) <- colname.list
+rownames(MBCdeg1) <- rownames(MBCdeg2) <- rownames(MBCdeg3) <- rowname.list
+
+matome <- NULL
+```
+
+### Creating original data
+
+```{r}
+for (assign in param$assign$`2group`){
+  P1 <- assign[1]
+  
+  for(i in 1:ncol(MBCdeg2_1)){
+    in_f <- paste("../acc_2group_",name,"_",PDEG,"_",P1,"_fixed_n",n1,".txt",sep = "")
+    data <- read.table(in_f,header = TRUE,sep = '\t')
+    MBCdeg1[,i] <- data$MBCdeg1
+    MBCdeg2[,i] <- data$MBCdeg2
+    MBCdeg3[,i] <- data$MBCdeg3
+  }
+  P <- paste('(PG1, PG2)\n','(',P1,',',1-P1,')',sep='')
+  
+  datMBCdeg1 <- data.frame(Method = "MBCdeg1",P1 = P,melt(MBCdeg1))
+  datMBCdeg2 <- data.frame(Method = "MBCdeg2",P1 = P,melt(MBCdeg2))
+  datMBCdeg3 <- data.frame(Method = "MBCdeg3",P1 = P,melt(MBCdeg3))
+  
+  dat <- rbind(datMBCdeg1,datMBCdeg2,datMBCdeg3)
+  matome <- rbind(matome,dat)
+}
+colnames(matome) <- c('Method','Assign','rep','PDEG','AUC')
+```
+
+## Plotting
+
+```{r}
+g <- ggplot(matome,aes(x = Method,y = AUC,fill = Method))
+g <- g + theme_bw()
+g <- g + labs(x = "",y = "AUC",color = 'Method')
+g <- g + scale_x_discrete(label = c("MBCdeg1","MBCdeg2","MBCdeg3"))
+g <- g + scale_color_manual(values = c("#FF367F","#4689FF","#009900")) + scale_fill_manual(values = rep("white",3))
+g <- g + geom_boxplot(aes(col = Method))
+g <- g + theme(axis.title.y = element_text(size = 18,face = "bold"),
+               axis.text.x = element_blank(),
+               axis.text.y = element_text(size = 16,face = "bold"),
+               strip.text.x = element_text(size = 18,face = "bold.italic"),
+               strip.text.y = element_text(size = 18,face = "bold.italic"),
+               legend.box = 'horizontal', 
+               legend.position = 'bottom', 
+               legend.title = element_text(size = 15,face = "bold"),
+               legend.text = element_text(size = 15,face = "bold.italic"),
+               panel.grid.major.x = element_blank())
+g <- g + facet_grid(PDEG ~ Assign)
+plot(g)
+```
+
+
+## Output
+
+```{r}
+out_f <- paste('test_tcc_fixed_ac_n',n1,'.png',sep = '')
+ggsave(file = out_f, plot = g, dpi = 300, width = 10 , height = 15)
+```
