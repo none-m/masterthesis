@@ -25,7 +25,7 @@ for (assign in param$assign$`2group`){
   P2 <- assign[2]
   
   # Loading data
-  in_f <- paste("../res_2group_",name,"_",PDEG,"_",P1,"_fixed_n",n1,".obj",sep="")
+  in_f <- paste("../res_2group_", name, "_", PDEG, "_", P1, "_fixed_n", n1, ".obj", sep = "")
   data.all <- readRDS(in_f)
   
   data <- list(edgeR = data.all$edgeR,
@@ -47,9 +47,9 @@ for (assign in param$assign$`2group`){
     list_ptm <- NULL
     for (i in 1:length(data$edgeR)){
       ptm <- data[[j]][[i]]$time
-      list_ptm <- rbind(list_ptm,ptm)
+      list_ptm <- rbind(list_ptm, ptm)
     }
-    df_ptm <- cbind(df_ptm,list_ptm)
+    df_ptm <- cbind(df_ptm, list_ptm)
   }
   
   colnames(df_ptm) <- names(data)
@@ -58,12 +58,11 @@ for (assign in param$assign$`2group`){
   mean <- colMeans(df_ptm)
   
   # Summarizing average computation time into data frames
-  df_mean <- rbind(df_mean,mean)
+  df_mean <- rbind(df_mean, mean)
 }
 
 rownames(df_mean) <- param$assign$`2group`
 
 # Output
-out_f <- paste("../ptm_2group_",name,"_",PDEG,"_fixed_n",n1,".txt",sep="")
-write.table(df_mean,out_f,sep="\t",append=F,quote=F,row.names=T)
-
+out_f <- paste("../ptm_2group_", name, "_", PDEG, "_fixed_n", n1, ".txt", sep = "")
+write.table(df_mean, out_f, sep = "\t", append = F, quote = F, row.names = T)
