@@ -21,20 +21,20 @@ source("../../package.R")
 ### fixed setting
 
 ```{r}
-PDEG = param$pdeg
-data.name = param$simdata.name
-name = data.name[1]
-N_trial = 100
-nominalFDR <- seq(0,1,0.001)
-labels.list <- list(c("edgeR","DESeq2","MBCdeg1_q","MBCdeg2_q","MBCdeg3_q"),
-                    c("edgeR","DESeq2","MBCdeg1_pos","MBCdeg2_pos","MBCdeg3_pos"))
+PDEG <- param$pdeg
+data.name <- param$simdata.name
+name <- data.name[1]
+N_trial <- 100
+nominalFDR <- seq(0, 1, 0.001)
+labels.list <- list(c("edgeR", "DESeq2", "MBCdeg1_q", "MBCdeg2_q", "MBCdeg3_q"),
+                    c("edgeR", "DESeq2", "MBCdeg1_pos", "MBCdeg2_pos", "MBCdeg3_pos"))
 ```
 
 ### manual setting
 
 ```{r}
-n1 = 3
-labels = labels.list[[1]]
+n1 <- 3
+labels <- labels.list[[1]]
 ```
 
 ## Formatting data
@@ -44,11 +44,11 @@ labels = labels.list[[1]]
 ```{r}
 df_list <- vector("list", length = 5)
 for (i in 1:length(df_list)){
-  df_list[[i]] <- matrix(0,ncol = length(PDEG),nrow = length(nominalFDR))
-  colnames(df_list[[i]]) <- paste('PDEG = ',PDEG,sep = '')
+  df_list[[i]] <- matrix(0, ncol = length(PDEG), nrow = length(nominalFDR))
+  colnames(df_list[[i]]) <- paste("PDEG = ", PDEG, sep = "")
   rownames(df_list[[i]]) <- nominalFDR
 }
-names(df_list) <- c("edgeR","DESeq2","MBCdeg1","MBCdeg2","MBCdeg3")
+names(df_list) <- c("edgeR", "DESeq2", "MBCdeg1", "MBCdeg2", "MBCdeg3")
 
 matome <- NULL
 ```
@@ -60,16 +60,16 @@ for (assign in param$assign$`2group`){
   P1 <- assign[1]
   
   for (i in 1:length(PDEG)){
-    in_f <- paste("../fdr_2group_",name,"_",PDEG[i],"_",P1,"_fixed_n",n1,".txt",sep = "")
-    data <- read.table(in_f,sep='\t',header = T)
-    names(data) <- c("DESeq2","edgeR","MBCdeg1_pos","MBCdeg1_q","MBCdeg2_pos","MBCdeg2_q","MBCdeg3_pos","MBCdeg3_q")
+    in_f <- paste("../fdr_2group_", name, "_", PDEG[i], "_", P1, "_fixed_n", n1, ".txt", sep = "")
+    data <- read.table(in_f, sep = "\t", header = T)
+    names(data) <- c("DESeq2", "edgeR", "MBCdeg1_pos", "MBCdeg1_q", "MBCdeg2_pos", "MBCdeg2_q", "MBCdeg3_pos", "MBCdeg3_q")
     
     for (c in 1:ncol(data)){
-      data[,c][is.infinite(data[,c])] <- 0
+      data[, c][is.infinite(data[, c])] <- 0
     }
     
     # 描画
-    df_list$edgeR[,i] <-data$edgeR 
+    df_list$edgeR[,i] <- data$edgeR 
     df_list$DESeq2[,i] <- data$DESeq2
     df_list$MBCdeg1[,i] <- data$MBCdeg1_q
     df_list$MBCdeg2[,i] <- data$MBCdeg2_q
@@ -78,44 +78,44 @@ for (assign in param$assign$`2group`){
     #df_list$MBCdeg2[,i] <- data$MBCdeg2_pos
     #df_list$MBCdeg3[,i] <- data$MBCdeg3_pos
   }
-  P <- paste('(PG1, PG2)\n','(',P1,',',1-P1,')',sep = '')
+  P <- paste("(PG1, PG2)\n", "(", P1, ",", 1 - P1, ")", sep = "")
   
-  datedgeR <- data.frame(Method = "a",P1 = P,melt(df_list$edgeR))
-  datDESeq2 <- data.frame(Method = "b",P1 = P,melt(df_list$DESeq2))
-  datMBCdeg1 <- data.frame(Method = "c",P1 = P,melt(df_list$MBCdeg1))
-  datMBCdeg2 <- data.frame(Method = "d",P1 = P,melt(df_list$MBCdeg2))
-  datMBCdeg3 <- data.frame(Method = "e",P1 = P,melt(df_list$MBCdeg3))
+  datedgeR <- data.frame(Method = "a", P1 = P, melt(df_list$edgeR))
+  datDESeq2 <- data.frame(Method = "b", P1 = P, melt(df_list$DESeq2))
+  datMBCdeg1 <- data.frame(Method = "c", P1 = P, melt(df_list$MBCdeg1))
+  datMBCdeg2 <- data.frame(Method = "d", P1 = P, melt(df_list$MBCdeg2))
+  datMBCdeg3 <- data.frame(Method = "e", P1 = P, melt(df_list$MBCdeg3))
   
-  dat <- rbind(datedgeR,datDESeq2,datMBCdeg1,datMBCdeg2,datMBCdeg3)
-  matome <- rbind(matome,dat)
+  dat <- rbind(datedgeR, datDESeq2, datMBCdeg1, datMBCdeg2, datMBCdeg3)
+  matome <- rbind(matome, dat)
 }
-colnames(matome) <- c("Method","P1","nominal_FDR","PDEG","true_FDR")
+colnames(matome) <- c("Method", "P1", "nominal_FDR", "PDEG", "true_FDR")
 cutoff <- matome[matome$nominal_FDR == 0.05,]
 ```
 
 ## Plotting
 
 ```{r}
-g <- ggplot(matome,aes(x = nominal_FDR,y = true_FDR,fill = Method))
+g <- ggplot(matome, aes(x = nominal_FDR, y = true_FDR, fill = Method))
 g <- g + theme_bw()
-g <- g + labs(x = "Cut off",y = "FDR",color = 'Method')
-g <- g + scale_x_continuous(limit = c(0.0,1.0),breaks = c(0.0,1.0))
-g <- g + scale_y_continuous(limit = c(0.0,1.0),breaks = c(0.0,1.0))
-g <- g + scale_color_manual(values = c("#8a2be2","#cd853f","#FF367F","#4689FF","#009900","#696969"),labels = labels)
-g <- g + geom_line(aes(col = Method),size = 0.7)
-g <- g + geom_abline(intercept = 0,slope = 1,linetype = 2,alpha = 0.8) + labs(color = "Method")
-g <- g + geom_point(data = cutoff,mapping = aes(x = nominal_FDR,y = true_FDR,col = Method),show.legend = FALSE)
+g <- g + labs(x = "Cut off", y = "FDR", color = "Method")
+g <- g + scale_x_continuous(limit = c(0.0,1.0), breaks = c(0.0,1.0))
+g <- g + scale_y_continuous(limit = c(0.0,1.0), breaks = c(0.0,1.0))
+g <- g + scale_color_manual(values = c("#8a2be2", "#cd853f", "#FF367F", "#4689FF", "#009900", "#696969"), labels = labels)
+g <- g + geom_line(aes(col = Method), size = 0.7)
+g <- g + geom_abline(intercept = 0, slope = 1, linetype = 2, alpha = 0.8) + labs(color = "Method")
+g <- g + geom_point(data = cutoff, mapping = aes(x = nominal_FDR, y = true_FDR, col = Method), show.legend = FALSE)
 g <- g + theme(aspect.ratio = 1,
-               axis.title.x = element_text(size = 15,face = "bold"),
-               axis.title.y = element_text(size = 15,face = "bold"),
-               axis.text.x = element_text(size = 14,face = "bold"),
-               axis.text.y = element_text(size = 14,face = "bold"),
-               strip.text.x = element_text(size = 17,face = "bold.italic"),
-               strip.text.y = element_text(size = 17,face = "bold.italic"),
-               legend.box = 'horizontal', 
-               legend.position = 'bottom',
-               legend.title = element_text(size = 15,face = "bold"),
-               legend.text = element_text(size = 13,face = "bold.italic"))
+               axis.title.x = element_text(size = 15, face = "bold"),
+               axis.title.y = element_text(size = 15, face = "bold"),
+               axis.text.x = element_text(size = 14, face = "bold"),
+               axis.text.y = element_text(size = 14, face = "bold"),
+               strip.text.x = element_text(size = 17, face = "bold.italic"),
+               strip.text.y = element_text(size = 17, face = "bold.italic"),
+               legend.box = "horizontal", 
+               legend.position = "bottom",
+               legend.title = element_text(size = 15, face = "bold"),
+               legend.text = element_text(size = 13, face = "bold.italic"))
 g <- g + facet_grid(PDEG ~ P1)
 plot(g)
 ```
@@ -123,8 +123,8 @@ plot(g)
 ## Output
 
 ```{r}
-out_f <- paste('FDR_n',n1,'_q.png',sep = '')
-#out_f <- paste('FDR_n',n1,'_pos.png',sep = '')
+out_f <- paste("FDR_n", n1, "_q.png", sep = "")
+#out_f <- paste("FDR_n", n1, "_pos.png", sep = "")
 ggsave(g,out_f,dpi = 300,width = 10,height = 15)
 ```
 

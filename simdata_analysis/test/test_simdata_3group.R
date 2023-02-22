@@ -26,7 +26,7 @@ n1 <- n2 <- n3 <- param$rep[[1]]
 
 
 # Loading data
-in_f <- paste("../simdata_3group_",name,"_",PDEG,"_",P1,"_fixed_n",n1,".obj",sep="")
+in_f <- paste("../simdata_3group_", name, "_", PDEG, "_", P1, "_fixed_n", n1, ".obj", sep = "")
 data.all <- readRDS(in_f)
 
 
@@ -44,13 +44,13 @@ for (i in 1:N_trial){
   obj <- as.numeric(data.all[[name]][[i]]$simulation$trueDEG != 0) 
   
   ### edgeR
-  res.list$edgeR[[i]] <- my.edger(data,data.cl)
+  res.list$edgeR[[i]] <- my.edger(data, data.cl)
   
   ### DESeq2
-  res.list$DESeq2[[i]] <- my.deseq2(data,data.cl)
+  res.list$DESeq2[[i]] <- my.deseq2(data, data.cl)
   
   ### TCC
-  res.list$TCC[[i]] <- my.tcc(data,data.cl,q=q)
+  res.list$TCC[[i]] <- my.tcc(data, data.cl, q = q)
   
   ### getting norm.factors
   norm.factors <- res.list$TCC[[i]]$norm.factors
@@ -60,9 +60,9 @@ for (i in 1:N_trial){
   
   ### MBCdeg
   for(k in 1:length(k.list)){
-    res.list$MBCdeg1[[k]][[i]] <- my.mbcdeg(data,data.cl,k=k.list[k],q=q)
-    res.list$MBCdeg2[[k]][[i]] <- my.mbcdeg(data,data.cl,normalizer = log(size.factors),k=k.list[k],q=q)
-    res.list$MBCdeg3[[k]][[i]] <- my.mbcdeg(data,data.cl,normalizer = log(nf),k=k.list[k],q=q)
+    res.list$MBCdeg1[[k]][[i]] <- my.mbcdeg(data, data.cl, k = k.list[k], q = q)
+    res.list$MBCdeg2[[k]][[i]] <- my.mbcdeg(data, data.cl, normalizer = log(size.factors), k = k.list[k], q = q)
+    res.list$MBCdeg3[[k]][[i]] <- my.mbcdeg(data, data.cl, normalizer = log(nf), k = k.list[k], q = q)
   }
 }
 res.list$obj <- obj
@@ -70,5 +70,5 @@ names(res.list$MBCdeg1) <- names(res.list$MBCdeg2) <- names(res.list$MBCdeg3) <-
 
 
 # Output
-out_f <- paste("../res_3group_",name,"_",PDEG,"_",P1,"_fixed_n",n1,".obj",sep="")
-saveRDS(res.list,out_f)
+out_f <- paste("../res_3group_", name, "_", PDEG, "_", round(P1, digits = 2), "_fixed_n", n1, ".obj", sep = "")
+saveRDS(res.list, out_f)

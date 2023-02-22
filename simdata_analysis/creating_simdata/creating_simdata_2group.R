@@ -34,8 +34,8 @@ for (i in 1:N_trial){
   tcc <- simulateReadCounts(Ngene = G,
                             PDEG = PDEG,
                             DEG.assign= assign,
-                            DEG.foldchange = c(FC,FC),
-                            replicates = c(n1,n2))
+                            DEG.foldchange = c(FC, FC),
+                            replicates = c(n1, n2))
   simdata[[data.name[1]]][[i]] <- tcc
 }
 
@@ -61,17 +61,17 @@ for (i in 1:N_trial){
   set.seed(i)
   simOpts <- RNAseq.SimOptions.2grp(ngenes = G,
                                     p.DE = PDEG,
-                                    lfc = c(rep(FC,G*PDEG*P1),rep(-FC,G*PDEG*P2)),
-                                    lBaselineExpr="bottomly",
-                                    lOD="bottomly",
-                                    sim.seed=1)
-  simres <- simRNAseq(simOpts,n1,n2)
-  colnames(simres$counts) <- c(paste('G1_rep',1:n1,sep=''),paste('G2_rep',1:n2,sep=''))
-  rownames(simres$counts) <- paste("Gene_",1:G,sep="")
+                                    lfc = c(rep(FC, G*PDEG*P1), rep(-FC, G*PDEG*P2)),
+                                    lBaselineExpr = "bottomly",
+                                    lOD = "bottomly",
+                                    sim.seed = 1)
+  simres <- simRNAseq(simOpts, n1, n2)
+  colnames(simres$counts) <- c(paste('G1_rep', 1:n1, sep = ''), paste('G2_rep', 1:n2, sep = ''))
+  rownames(simres$counts) <- paste("Gene_", 1:G, sep = "")
   simdata[[data.name[3]]][[i]] <- simres
 }
 
 
 # Output
-out_f <- paste("../simdata_2group_",PDEG,"_",P1,"_fixed_n",n1,".obj",sep="")
-saveRDS(simdata,out_f)
+out_f <- paste("../simdata_2group_", PDEG, "_", P1, "_fixed_n", n1, ".obj", sep = "")
+saveRDS(simdata, out_f)

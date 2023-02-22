@@ -1,5 +1,5 @@
 ---
-title: "Figure 9"
+title: 'Figure 9'
 author: '##### Manon Makino'
 date: '2023-02-21'
 output: html_document
@@ -40,12 +40,12 @@ n1 = 3
 ```{r}
 colname.list <- NULL
 for (pdeg in PDEG){
-  colname <- paste('PDEG = ',pdeg,sep = '')
-  colname.list <- c(colname.list,colname)
+  colname <- paste("PDEG = ", pdeg, sep = "")
+  colname.list <- c(colname.list, colname)
 }
 rowname.list <- 1:N_trial
 
-TCC <- edgeR <- DESeq2 <- MBCdeg1 <- MBCdeg2 <- MBCdeg3 <- matrix(0,ncol = length(PDEG),nrow = N_trial)
+TCC <- edgeR <- DESeq2 <- MBCdeg1 <- MBCdeg2 <- MBCdeg3 <- matrix(0, ncol = length(PDEG), nrow = N_trial)
 colnames(edgeR) <- colnames(DESeq2) <- colnames(TCC) <- colnames(MBCdeg1) <- colnames(MBCdeg2) <- colnames(MBCdeg3) <- colname.list
 rownames(edgeR) <- rownames(DESeq2) <- rownames(TCC) <- rownames(MBCdeg1) <- rownames(MBCdeg2) <- rownames(MBCdeg3) <- rowname.list
 
@@ -59,8 +59,8 @@ for (assign in param$assign$`2group`){
   P1 <- assign[1]
   
   for(i in 1:ncol(MBCdeg1)){
-    in_f <- paste("../auc_2group_",name,"_",PDEG[i],"_",P1,"_fc_n",n1,".txt",sep = "")
-    data <- read.table(in_f,header = TRUE,sep = '\t')
+    in_f <- paste("../auc_2group_", name, "_", PDEG[i], "_", P1, "_fc_n", n1, ".txt", sep = "")
+    data <- read.table(in_f, header = TRUE, sep = "\t")
     edgeR[,i] <- data$edgeR
     DESeq2[,i] <- data$DESeq2
     TCC[,i] <- data$TCC
@@ -69,78 +69,50 @@ for (assign in param$assign$`2group`){
     MBCdeg3[,i] <- data$MBCdeg3_K3
   }
   
-  P <- paste("(","PG1",",","PG2",")\n","(",P1,",",1-P1,")",sep = '')
+  P <- paste("(", "PG1", ",", "PG2", ")\n", "(", P1, ",", 1 - P1, ")", sep = "")
   
-  datedgeR <- data.frame(Method = "a",P1 = P,melt(edgeR))
-  datDESeq2 <- data.frame(Method = "b",P1 = P,melt(DESeq2))
-  datTCC <- data.frame(Method = "c",P1 = P,melt(TCC))
-  datMBCdeg1 <- data.frame(Method = "d",P1 = P,melt(MBCdeg1))
-  datMBCdeg2 <- data.frame(Method = "e",P1 = P,melt(MBCdeg2))
-  datMBCdeg3 <- data.frame(Method = "f",P1 = P,melt(MBCdeg3))
+  datedgeR <- data.frame(Method = "a", P1 = P, melt(edgeR))
+  datDESeq2 <- data.frame(Method = "b", P1 = P, melt(DESeq2))
+  datTCC <- data.frame(Method = "c", P1 = P, melt(TCC))
+  datMBCdeg1 <- data.frame(Method = "d", P1 = P, melt(MBCdeg1))
+  datMBCdeg2 <- data.frame(Method = "e", P1 = P, melt(MBCdeg2))
+  datMBCdeg3 <- data.frame(Method = "f", P1 = P, melt(MBCdeg3))
   
-  dat <- rbind(datedgeR,datDESeq2,datMBCdeg1,datTCC,datMBCdeg2,datMBCdeg3)
-  matome <- rbind(matome,dat)
+  dat <- rbind(datedgeR, datDESeq2, datMBCdeg1, datTCC, datMBCdeg2, datMBCdeg3)
+  matome <- rbind(matome, dat)
 }
 
-colnames(matome) <- c('Method','Assign','rep','PDEG','AUC')
+colnames(matome) <- c("Method", "Assign", "rep", "PDEG", "AUC")
 ```
 
 ## Plotting
 
 ```{r}
-g <- ggplot(matome,aes(x = Method,y = AUC,fill = Method))
+g <- ggplot(matome, aes(x = Method, y = AUC, fill = Method))
 g <- g + theme_bw()
-g <- g + labs(x = "",y = "AUC" ,color = 'Method')
-g <- g + scale_x_discrete(labels =c("edgeR","DESeq2","TCC","MBCdeg1","MBCdeg2","MBCdeg3"))
-g <- g + scale_color_manual(values = c("#8a2be2","#cd853f","#696969","#FF367F","#4689FF","#009900"),labels = c("edgeR","DESeq2","TCC","MBCdeg1","MBCdeg2","MBCdeg3")) + scale_fill_manual(values = rep("white",6),labels = c("edgeR","DESeq2","TCC","MBCdeg1","MBCdeg2","MBCdeg3"))
-g <- g + scale_y_continuous(limit = c(0,1.0))
+g <- g + labs(x = "", y = "AUC" , color = "Method")
+g <- g + scale_x_discrete(labels = c("edgeR", "DESeq2", "TCC", "MBCdeg1", "MBCdeg2", "MBCdeg3"))
+g <- g + scale_color_manual(values = c("#8a2be2", "#cd853f", "#696969", "#FF367F", "#4689FF", "#009900"), labels = c("edgeR", "DESeq2", "TCC", "MBCdeg1", "MBCdeg2", "MBCdeg3")) + scale_fill_manual(values = rep("white", 6), labels = c("edgeR", "DESeq2", "TCC", "MBCdeg1", "MBCdeg2", "MBCdeg3"))
+g <- g + scale_y_continuous(limit = c(0, 1.0))
 g <- g + geom_boxplot(aes(col = Method))
-g <- g + theme(axis.title.y = element_text(size = 18,face = "bold"),
+g <- g + theme(axis.title.y = element_text(size = 18, face = "bold"),
                axis.text.x = element_blank(),
-               axis.text.y = element_text(size = 16,face = "bold"),
-               strip.text.x = element_text(size = 18,face = "bold.italic"),
-               strip.text.y = element_text(size = 18,face = "bold.italic"),
-               legend.box = 'horizontal', 
-               legend.position = 'bottom',
-               legend.title = element_text(size = 15,face = "bold"),
-               legend.text = element_text(size = 15,face = "bold.italic"),
-               panel.grid.major.x = element_blank(),)
+               axis.text.y = element_text(size = 16, face = "bold"),
+               strip.text.x = element_text(size = 18, face = "bold.italic"),
+               strip.text.y = element_text(size = 18, face = "bold.italic"),
+               legend.box = "horizontal", 
+               legend.position = "bottom",
+               legend.title = element_text(size = 15, face = "bold"),
+               legend.text = element_text(size = 15, face = "bold.italic"),
+               panel.grid.major.x = element_blank())
 g <- g + guides(color = guide_legend(nrow = 1))
 g <- g + facet_grid(PDEG ~ Assign)
 plot(g)
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Out put
 
 ```{r}
-out_f <- paste('test_tcc_fc_n',n1,'.png',sep = '')
-ggsave(file = out_f,plot = g,dpi = 300,width = 10,height = 15)
+out_f <- paste("test_", name, "_fc_n", n1, ".png", sep = "")
+ggsave(file = out_f, plot = g, dpi = 300, width = 10, height = 15)
 ```

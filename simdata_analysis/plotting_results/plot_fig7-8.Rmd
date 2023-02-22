@@ -21,16 +21,16 @@ source("../../package.R")
 ### fixed setting
 
 ```{r}
-PDEG = param$pdeg
-data.name = param$simdata.name
-N_trial = 50
+PDEG <- param$pdeg
+data.name <- param$simdata.name
+N_trial <- 50
 ```
 
 ### manual setting
 
 ```{r}
-n1 = 3
-name = data.name[1]
+n1 <- 3
+name <- data.name[1]
 ```
 
 ## Formatting data
@@ -40,8 +40,8 @@ name = data.name[1]
 ```{r}
 colname.list <- NULL
 for (pdeg in PDEG){
-  colname <- paste('PDEG = ',pdeg,sep = '')
-  colname.list <- c(colname.list,colname)
+  colname <- paste("PDEG = ", pdeg, sep = "")
+  colname.list <- c(colname.list, colname)
 }
 rowname.list <- 1:N_trial
 
@@ -59,8 +59,8 @@ for (assign in param$assign$`2group`){
   P1 <- assign[1]
   
   for(i in 1:ncol(MBCdeg2_1)){
-    in_f <- paste("../auc_2group_",name,"_",PDEG[i],"_",P1,"_fixed_n",n1,".txt",sep = "")
-    data <- read.table(in_f,header = TRUE,sep = '\t')
+    in_f <- paste("../auc_2group_", name, "_", PDEG[i], "_", P1, "_fixed_n", n1,".txt", sep = "")
+    data <- read.table(in_f, header = TRUE, sep = "\t")
     MBCdeg2_1[,i] <- data$MBCdeg1_K2
     MBCdeg3_1[,i] <- data$MBCdeg1_K3
     MBCdeg4_1[,i] <- data$MBCdeg1_K4
@@ -71,43 +71,43 @@ for (assign in param$assign$`2group`){
     MBCdeg3_3[,i] <- data$MBCdeg3_K3
     MBCdeg4_3[,i] <- data$MBCdeg3_K4
   }
-  P <-paste('(PG1, PG2)\n','(',P1,',',1-P1,')',sep = '')
+  P <- paste("(PG1, PG2)\n", "(", P1, ",", 1 - P1, ")", sep = "")
   
-  datMBCdeg2_1 <- data.frame(Method = "MBCdeg2_1",P1 = P,melt(MBCdeg2_1))
-  datMBCdeg3_1 <- data.frame(Method = "MBCdeg3_1",P1 = P,melt(MBCdeg3_1))
-  datMBCdeg4_1 <- data.frame(Method = "MBCdeg4_1",P1 = P,melt(MBCdeg4_1))
-  datMBCdeg2_2 <- data.frame(Method = "MBCdeg2_2",P1 = P,melt(MBCdeg2_2))
-  datMBCdeg3_2 <- data.frame(Method = "MBCdeg3_2",P1 = P,melt(MBCdeg3_2))
-  datMBCdeg4_2 <- data.frame(Method = "MBCdeg4_2",P1 = P,melt(MBCdeg4_2))
-  datMBCdeg2_3 <- data.frame(Method = "MBCdeg2_3",P1 = P,melt(MBCdeg2_3))
-  datMBCdeg3_3 <- data.frame(Method = "MBCdeg3_3",P1 = P,melt(MBCdeg3_3))
-  datMBCdeg4_3 <- data.frame(Method = "MBCdeg4_3",P1 = P,melt(MBCdeg4_3))
+  datMBCdeg2_1 <- data.frame(Method = "MBCdeg2_1", P1 = P, melt(MBCdeg2_1))
+  datMBCdeg3_1 <- data.frame(Method = "MBCdeg3_1", P1 = P, melt(MBCdeg3_1))
+  datMBCdeg4_1 <- data.frame(Method = "MBCdeg4_1", P1 = P, melt(MBCdeg4_1))
+  datMBCdeg2_2 <- data.frame(Method = "MBCdeg2_2", P1 = P, melt(MBCdeg2_2))
+  datMBCdeg3_2 <- data.frame(Method = "MBCdeg3_2", P1 = P, melt(MBCdeg3_2))
+  datMBCdeg4_2 <- data.frame(Method = "MBCdeg4_2", P1 = P, melt(MBCdeg4_2))
+  datMBCdeg2_3 <- data.frame(Method = "MBCdeg2_3", P1 = P, melt(MBCdeg2_3))
+  datMBCdeg3_3 <- data.frame(Method = "MBCdeg3_3", P1 = P, melt(MBCdeg3_3))
+  datMBCdeg4_3 <- data.frame(Method = "MBCdeg4_3", P1 = P, melt(MBCdeg4_3))
   
-  dat <- rbind(datMBCdeg2_1,datMBCdeg2_2,datMBCdeg2_3,datMBCdeg3_1,datMBCdeg3_2,datMBCdeg3_3,datMBCdeg4_1,datMBCdeg4_2,datMBCdeg4_3)
-  matome <- rbind(matome,dat)
+  dat <- rbind(datMBCdeg2_1, datMBCdeg2_2, datMBCdeg2_3, datMBCdeg3_1, datMBCdeg3_2, datMBCdeg3_3, datMBCdeg4_1, datMBCdeg4_2, datMBCdeg4_3)
+  matome <- rbind(matome, dat)
 }
 
-colnames(matome) <- c('Method','Assign','rep','PDEG','AUC')
+colnames(matome) <- c("Method", "Assign", "rep", "PDEG", "AUC")
 ```
 
 ## Plotting
 
 ```{r}
-g <- ggplot(matome,aes(x = Method,y = AUC,fill = Method))
+g <- ggplot(matome, aes(x = Method, y = AUC, fill = Method))
 g <- g + theme_bw()
-g <- g + labs(x = "",y = "AUC" ,color = 'Method')
-g <- g + scale_x_discrete(label = c("","K = 2","","","K = 3","","","K = 4",""))
-g <- g + scale_color_manual(values = rep(c("#FF367F","#4689FF","#009900"),3))+scale_fill_manual(values=rep("white",9))
+g <- g + labs(x = "", y = "AUC", color = "Method")
+g <- g + scale_x_discrete(label = c("", "K = 2", "", "", "K = 3", "", "", "K = 4", ""))
+g <- g + scale_color_manual(values = rep(c("#FF367F", "#4689FF", "#009900"), 3)) + scale_fill_manual(values = rep("white", 9))
 g <- g + geom_boxplot(aes(col = Method))
-g <- g + scale_y_continuous(limit = c(0,1.0))
+g <- g + scale_y_continuous(limit = c(0, 1.0))
 g <- g + theme(axis.title.y = element_text(size = 18, face = "bold"),
-               axis.text.x = element_text(size = 15,angle = 90,face = "bold"),
-               axis.text.y = element_text(size = 16,face = "bold"),
+               axis.text.x = element_text(size = 15, angle = 90, face = "bold"),
+               axis.text.y = element_text(size = 16, face = "bold"),
                strip.text.x = element_text(size = 18, face = "bold.italic"),
                strip.text.y = element_text(size = 18, face = "bold.italic"),
-               legend.box = 'horizontal', 
-               legend.position = 'none',
-               legend.title = element_text(size = 15,face = "bold"),
+               legend.box = "horizontal", 
+               legend.position = "none",
+               legend.title = element_text(size = 15, face = "bold"),
                legend.text = element_text(size = 13),
                panel.grid.major.x = element_blank())
 g <- g + facet_grid(PDEG ~ Assign)
@@ -117,8 +117,8 @@ plot(g)
 ## Out put
 
 ```{r}
-out_f <- paste('test_',name,'_fixed_K_n',n1,'.png',sep = '')
-ggsave(file = out_f,plot = g,dpi = 300,width= 10 ,height = 15)
+out_f <- paste("test_", name, "_fixed_K_n", n1, ".png", sep = "")
+ggsave(file = out_f, plot = g, dpi = 300, width= 10 , height = 15)
 ```
 
 

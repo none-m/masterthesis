@@ -33,15 +33,15 @@ N_trial <- 50
 for (i in 1:N_trial){
   print(i)
   set.seed(i)
-  tcc<-simulateReadCounts(Ngene=G,
-                          PDEG=PDEG,
-                          DEG.assign=c(P1, P2, P3),
-                          replicates=c(n1, n2, n3),
-                          DEG.foldchange=c(FC,FC,FC))
+  tcc<-simulateReadCounts(Ngene = G,
+                          PDEG = PDEG,
+                          DEG.assign = c(P1, P2, P3),
+                          replicates = c(n1, n2, n3),
+                          DEG.foldchange = c(FC, FC, FC))
   simdata[[name]][[i]] <- tcc
 }
 
 
 # Output
-out_f <- paste("../simdata_3group_",name,"_",PDEG,"_",P1,"_fixed_n",n1,".obj",sep="")
-saveRDS(simdata,out_f)
+out_f <- paste("../simdata_3group_", name, "_", PDEG, "_", P1, "_fixed_n", n1, ".obj", sep = "")
+saveRDS(simdata, out_f)

@@ -21,7 +21,7 @@ k.list <- param$k[[1]]
 name <- data.name[1]
 
 # Loading data
-in_f <- paste("../res_2group_",name,"_",PDEG,"_",P1,"_fc_n",n1,".obj",sep="")
+in_f <- paste("../res_2group_", name, "_", PDEG, "_", P1, "_fc_n", n1, ".obj", sep = "")
 res.all <- readRDS(in_f)
 
 
@@ -38,39 +38,39 @@ for (i in 1:N_trial){
   
   ### edgeR
   ranking <- res.all$edgeR[[i]]$table$rank
-  auc <- AUC(rocdemo.sca(truth=obj, data=-ranking))
-  auc.list$edgeR <- rbind(auc.list$edgeR,auc)
+  auc <- AUC(rocdemo.sca(truth = obj, data = -ranking))
+  auc.list$edgeR <- rbind(auc.list$edgeR, auc)
   
   ### DESeq2
   ranking <- res.all$DESeq2[[i]]$table$rank
-  auc <- AUC(rocdemo.sca(truth=obj, data=-ranking))
-  auc.list$DESeq2 <- rbind(auc.list$DESeq2,auc)
+  auc <- AUC(rocdemo.sca(truth = obj, data = -ranking))
+  auc.list$DESeq2 <- rbind(auc.list$DESeq2, auc)
   
   ### TCC
   ranking <- res.all$TCC[[i]]$table$rank
-  auc <- AUC(rocdemo.sca(truth=obj, data=-ranking))
-  auc.list$TCC <- rbind(auc.list$TCC,auc)
+  auc <- AUC(rocdemo.sca(truth = obj, data = -ranking))
+  auc.list$TCC <- rbind(auc.list$TCC, auc)
   
   
   ### MBCdeg
   for (k in 1:length(k.list)){
     ### MBCdeg1
     ranking <- res.all$MBCdeg1[[k]][[i]]$table$rank
-    auc <- AUC(rocdemo.sca(truth=obj, data=-ranking))
-    auc.list$MBCdeg1[[k]] <- rbind(auc.list$MBCdeg1[[k]],auc)
+    auc <- AUC(rocdemo.sca(truth = obj, data = -ranking))
+    auc.list$MBCdeg1[[k]] <- rbind(auc.list$MBCdeg1[[k]], auc)
     
     ### MBCdeg2
     ranking <- res.all$MBCdeg2[[k]][[i]]$table$rank
-    auc <- AUC(rocdemo.sca(truth=obj, data=-ranking))
-    auc.list$MBCdeg2[[k]] <- rbind(auc.list$MBCdeg2[[k]],auc)
+    auc <- AUC(rocdemo.sca(truth = obj, data = -ranking))
+    auc.list$MBCdeg2[[k]] <- rbind(auc.list$MBCdeg2[[k]], auc)
     
     ### MBCdeg3
     ranking <- res.all$MBCdeg3[[k]][[i]]$table$rank
-    auc <- AUC(rocdemo.sca(truth=obj, data=-ranking))
-    auc.list$MBCdeg3[[k]] <- rbind(auc.list$MBCdeg3[[k]],auc)
+    auc <- AUC(rocdemo.sca(truth = obj, data = -ranking))
+    auc.list$MBCdeg3[[k]] <- rbind(auc.list$MBCdeg3[[k]], auc)
   }
 }
-names(auc.list$MBCdeg1) <- names(auc.list$MBCdeg2) <- names(auc.list$MBCdeg3) <- paste("K",k.list,sep="")
+names(auc.list$MBCdeg1) <- names(auc.list$MBCdeg2) <- names(auc.list$MBCdeg3) <- paste("K", k.list, sep = "")
 
 # concatenating the results
 matome <- data.frame(edgeR = auc.list$edgeR,
@@ -96,9 +96,8 @@ matome <- data.frame(edgeR = auc.list$edgeR,
                      MBCdeg3_K5 = auc.list$MBCdeg3$K5,
                      MBCdeg3_K10 = auc.list$MBCdeg3$K10,
                      MBCdeg3_K15 = auc.list$MBCdeg3$K15,
-                     MBCdeg3_K20 = auc.list$MBCdeg3$K20
-                     )
+                     MBCdeg3_K20 = auc.list$MBCdeg3$K20)
 
 # Output
-out_f <- paste("../auc_2group_",name,"_",PDEG,"_",P1,"_fc_n",n1,".txt",sep="")
-write.table(matome,out_f,sep="\t",append=F,quote=F,row.names=F)
+out_f <- paste("../auc_2group_", name, "_", PDEG, "_", P1, "_fc_n", n1, ".txt", sep = "")
+write.table(matome, out_f, sep = "\t", append = F, quote = F, row.names = F)
