@@ -112,3 +112,4 @@ downsampling <- function(count,n,n1,n2){
   
   return(subsumple)
 }
+

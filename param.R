@@ -16,4 +16,3 @@ param$realdata.name <- c("liver","immune","skin","lym")
 param$k <- list(3,2:4,2:5,c(2:5,seq(10,20,5)))
 param$n.subsample <- c(2:10,15,20,25,30,35,40)
              
-             
