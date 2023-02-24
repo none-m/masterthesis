@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 - **package.R**：解析に必要なパッケージ
 
 <br>
@@ -8,15 +7,11 @@
 <br>
 
 - **pipeline.R**：解析に使用する関数の定義
-=======
-# masterthesis
 
+<br>
 
-## simdata_analysis
+- **simdata_analysis**：シミュレーション解析用スクリプト
 
-シミュレーション解析用スクリプト
+<br>
 
-## realdata_analysis
-
-リアルデータ解析用スクリプト
->>>>>>> 5e8a413adae7f25fdc23f004041c78cec5e7eb26
+- **realdata_analysis**：リアルデータ解析用スクリプト
