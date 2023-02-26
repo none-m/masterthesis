@@ -61,7 +61,7 @@ for (i in 1:N_trial){
   set.seed(i)
   simOpts <- RNAseq.SimOptions.2grp(ngenes = G,
                                     p.DE = PDEG,
-                                    lfc = c(rep(FC, G*PDEG*P1), rep(-FC, G*PDEG*P2)),
+                                    lfc = c(rep(log(FC), G*PDEG*P1), rep(-log(FC), G*PDEG*P2)),
                                     lBaselineExpr = "bottomly",
                                     lOD = "bottomly",
                                     sim.seed = 1)
