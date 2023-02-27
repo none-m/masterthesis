@@ -64,7 +64,7 @@ for (i in 1:N_trial){
                                     lfc = c(rep(log(FC), G*PDEG*P1), rep(-log(FC), G*PDEG*P2)),
                                     lBaselineExpr = "bottomly",
                                     lOD = "bottomly",
-                                    sim.seed = 1)
+                                    sim.seed = i)
   simres <- simRNAseq(simOpts, n1, n2)
   colnames(simres$counts) <- c(paste('G1_rep', 1:n1, sep = ''), paste('G2_rep', 1:n2, sep = ''))
   rownames(simres$counts) <- paste("Gene_", 1:G, sep = "")
