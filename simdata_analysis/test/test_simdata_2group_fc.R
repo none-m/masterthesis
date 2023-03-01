@@ -63,8 +63,8 @@ for (i in 1:N_trial){
     res.list$MBCdeg2[[k]][[i]] <- my.mbcdeg(data, data.cl, normalizer = log(size.factors), k = k.list[k], q = q)
     res.list$MBCdeg3[[k]][[i]] <- my.mbcdeg(data, data.cl, normalizer = log(nf), k = k.list[k], q = q)
   }
+  res.list$obj[[i]] <- obj
 }
-res.list$obj <- obj
 names(res.list$MBCdeg1) <- names(res.list$MBCdeg2) <- names(res.list$MBCdeg3) <- paste("K",k.list,sep="")
 
 

@@ -35,7 +35,7 @@ matome <- NULL
 ## main loop
 N_trial <- length(res.all$edgeR)
 for (i in 1:N_trial){
-  obj <- res.all$obj
+  obj <- res.all$obj[[i]]
   
   ### edgeR
   ranking <- res.all$edgeR[[i]]$table$rank
